@@ -2,7 +2,7 @@
 
 @section('content')
   <div class="jumbotron">
-    <h1>Hello Laravel</h1>
+    <h1>Hello World</h1>
     <p class="lead">
       网站设计作业
     </p>
