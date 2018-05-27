@@ -11,19 +11,14 @@ class UsersController extends Controller
 {
     public function __construct()
     {
+        // 此处指定的动作以外，所有其他动作都必须登录用户才能访问
         $this->middleware('auth', [
-            'except' => ['show', 'create', 'store']
+            'except' => ['show', 'create', 'store', 'index']
         ]);
 
+        // 只让未登录用户访问注册页面
         $this->middleware('guest', [
             'only' => ['create']
-        ]);
-    }
-
-    public function __construct()
-    {
-        $this->middleware('auth', [
-            'except' => ['show', 'create', 'store']
         ]);
     }
 
@@ -37,10 +32,24 @@ class UsersController extends Controller
         return view('users.show', compact('user'));
     }
 
+    public function index()
+    {
+        $users = User::paginate(10);
+        return view('users.index', compact('users'));
+    }
+
     public function edit(User $user)
     {
         $this->authorize('update', $user);
         return view('users.edit', compact('user'));
+    }
+
+    public function destroy(User $user)
+    {
+        $this->authorize('destroy', $user);
+        $user->delete();
+        session()->flash('success', '成功删除用户！');
+        return back();
     }
 
     public function update(User $user, Request $request)
